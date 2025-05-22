@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NBA Statistics Graphs</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <link rel="stylesheet" href="../style/style.css">
+</head>
+<body>
+    <nav class="navbar slide-down">
+        <ul>
+            <li><a href="../index.html" class="nav-link">🏠 Home</a></li>
+            <li><a href="visual-court.html" class="nav-link">🎯 Visual Court</a></li>
+            <li><a href="graphs.html" class="nav-link">📈 Graphs</a></li>
+            <li><a href="diagrams.html" class="nav-link">🧠 Diagrams</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <div class="header">
+            <h1 class="fade-in">📈 Interactive NBA Statistics</h1>
+            <p class="fade-in-delay">Performance Analysis and Trends</p>
+        </div>
+        
+        <div class="content">
+            <div id="loading" class="loading">
+                <div class="loading-spinner"></div>
+                <p>Loading basketball statistics...</p>
+            </div>
+            
+            <div id="error" class="error" style="display: none;">
+                Error loading data. Please check if the CSV files are available.
+            </div>
+            
+            <div id="datasets" class="datasets-container" style="display: none;">
+                <div class="dataset-section regular-season slide-in-left">
+                    <div class="dataset-title">📊 Player Performance Trends</div>
+                    <div class="controls">
+                        <select class="form-select" id="statSelect">
+                            <option value="points">Points per Game</option>
+                            <option value="rebounds">Rebounds per Game</option>
+                            <option value="assists">Assists per Game</option>
+                            <option value="steals">Steals per Game</option>
+                            <option value="blocks">Blocks per Game</option>
+                        </select>
+                    </div>
+                    <div class="graph-container">
+                        <div id="trendGraph"></div>
+                    </div>
+                </div>
+                
+                <div class="dataset-section playoffs slide-in-right">
+                    <div class="dataset-title">🏀 Team Comparison</div>
+                    <div class="controls">
+                        <select class="form-select" id="teamSelect">
+                            <option value="all">All Teams</option>
+                            <option value="top10">Top 10 Teams</option>
+                            <option value="bottom10">Bottom 10 Teams</option>
+                        </select>
+                    </div>
+                    <div class="graph-container">
+                        <div id="teamGraph"></div>
+                    </div>
+                </div>
+
+                <div class="dataset-section regular-season slide-in-left">
+                    <div class="dataset-title">📊 Statistical Distribution</div>
+                    <div class="graph-container">
+                        <div id="distributionGraph"></div>
+                    </div>
+                </div>
+
+                <div class="dataset-section playoffs slide-in-right">
+                    <div class="dataset-title">⭐ Player Impact Score</div>
+                    <div class="graph-container">
+                        <div id="impactGraph"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../script/script.js"></script>
+    <script src="../script/visualizations.js"></script>
+</body>
+</html> 
