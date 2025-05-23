@@ -38,16 +38,7 @@
                     <div class="dataset-title">🎯 Shot Analysis</div>
                     <div class="controls">
                         <select class="form-select" id="playerSelect">
-                            <option value="all">All Players</option>
-                            <option value="top10">Top 10 Scorers</option>
-                            <option value="top10reb">Top 10 Rebounders</option>
-                            <option value="top10ast">Top 10 Assists</option>
-                        </select>
-                        <select class="form-select" id="shotTypeSelect">
-                            <option value="all">All Shots</option>
-                            <option value="2pt">2-Point Shots</option>
-                            <option value="3pt">3-Point Shots</option>
-                            <option value="ft">Free Throws</option>
+                            <option value="">Select Player</option>
                         </select>
                     </div>
                     <div class="court-container">
@@ -58,23 +49,22 @@
                 <div class="dataset-section playoffs slide-in-right">
                     <div class="dataset-title">📊 Shot Statistics</div>
                     <div class="stats-panel">
-                        <h3 class="visualization-title">Shot Distribution</h3>
-                        <div class="stats-value" id="shotDistribution">Loading...</div>
-                    </div>
-                    <div class="stats-panel">
                         <h3 class="visualization-title">Field Goal Percentage</h3>
-                        <div class="stats-value" id="fgPercentage">Loading...</div>
+                        <div class="stats-value" id="fgPercentage">0.0%</div>
                     </div>
                     <div class="stats-panel">
-                        <h3 class="visualization-title">Points per Shot</h3>
-                        <div class="stats-value" id="pointsPerShot">Loading...</div>
+                        <h3 class="visualization-title">Three Point Percentage</h3>
+                        <div class="stats-value" id="threePercentage">0.0%</div>
+                    </div>
+                    <div class="stats-panel">
+                        <h3 class="visualization-title">Points per Game</h3>
+                        <div class="stats-value" id="pointsPerGame">0.0</div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="../script/script.js"></script>
-    <script src="../script/visualizations.js"></script>
+    <script src="../script/court-viz.js"></script>
 </body>
-</html> 
+</html>

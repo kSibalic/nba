@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NBA Statistics Graphs</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <link rel="stylesheet" href="../style/style.css">
 </head>
 <body>
@@ -39,11 +38,11 @@
                     <div class="dataset-title">📊 Player Performance Trends</div>
                     <div class="controls">
                         <select class="form-select" id="statSelect">
-                            <option value="points">Points per Game</option>
-                            <option value="rebounds">Rebounds per Game</option>
-                            <option value="assists">Assists per Game</option>
-                            <option value="steals">Steals per Game</option>
-                            <option value="blocks">Blocks per Game</option>
+                            <option value="PTS">Points per Game</option>
+                            <option value="TRB">Rebounds per Game</option>
+                            <option value="AST">Assists per Game</option>
+                            <option value="STL">Steals per Game</option>
+                            <option value="BLK">Blocks per Game</option>
                         </select>
                     </div>
                     <div class="graph-container">
@@ -53,13 +52,6 @@
                 
                 <div class="dataset-section playoffs slide-in-right">
                     <div class="dataset-title">🏀 Team Comparison</div>
-                    <div class="controls">
-                        <select class="form-select" id="teamSelect">
-                            <option value="all">All Teams</option>
-                            <option value="top10">Top 10 Teams</option>
-                            <option value="bottom10">Bottom 10 Teams</option>
-                        </select>
-                    </div>
                     <div class="graph-container">
                         <div id="teamGraph"></div>
                     </div>
@@ -82,7 +74,6 @@
         </div>
     </div>
 
-    <script src="../script/script.js"></script>
-    <script src="../script/visualizations.js"></script>
+    <script src="../script/graphs.js"></script>
 </body>
-</html> 
+</html>
