@@ -30,7 +30,7 @@ class CourtVisualization {
     }
 
     cleanData(data) {
-        const numericFields = ['FG', 'FGA', 'FG%', '3P', '3PA', '3P%', '2P', '2PA', '2P%', 'PTS'];
+        const numericFields = ['FG', 'FGA', 'FG%', '3P', '3PA', '3P%', '2P', '2PA', '2P%', 'FT', 'FTA', 'FT%', 'PTS'];
         
         return data.map(d => {
             const cleaned = { ...d };
@@ -68,13 +68,22 @@ class CourtVisualization {
             .append('svg')
             .attr('width', width)
             .attr('height', height)
-            .style('background-color', '#1a1a1a');
+            .style('background-color', '#2a2a2a');
 
         const court = svg.append('g')
             .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
         const courtWidth = width - margin.left - margin.right;
         const courtHeight = height - margin.top - margin.bottom;
+
+        // Court dimensions (scaled)
+        const basketX = courtWidth * 0.05;
+        const basketY = courtHeight / 2;
+        const threePointRadius = courtWidth * 0.35;
+        const paintWidth = courtWidth * 0.16;
+        const paintHeight = courtHeight * 0.35;
+        const ftLineX = basketX + courtWidth * 0.19;
+        const cornerThreeX = courtWidth * 0.14;
 
         // Court outline
         court.append('rect')
@@ -84,57 +93,101 @@ class CourtVisualization {
             .attr('height', courtHeight)
             .attr('fill', 'none')
             .attr('stroke', '#ffffff')
-            .attr('stroke-width', 2);
+            .attr('stroke-width', 3);
 
-        // Center circle
-        court.append('circle')
-            .attr('cx', courtWidth / 2)
-            .attr('cy', courtHeight / 2)
-            .attr('r', 40)
-            .attr('fill', 'none')
-            .attr('stroke', '#ffffff')
-            .attr('stroke-width', 2);
-
-        // Three-point arc (simplified)
-        const arcRadius = courtWidth * 0.3;
-        court.append('path')
-            .attr('d', `M ${courtWidth * 0.1} ${courtHeight * 0.2} 
-                       A ${arcRadius} ${arcRadius} 0 0 1 ${courtWidth * 0.1} ${courtHeight * 0.8}`)
+        // Paint area
+        court.append('rect')
+            .attr('x', 0)
+            .attr('y', (courtHeight - paintHeight) / 2)
+            .attr('width', paintWidth)
+            .attr('height', paintHeight)
             .attr('fill', 'none')
             .attr('stroke', '#ffffff')
             .attr('stroke-width', 2);
 
         // Free throw line
         court.append('line')
-            .attr('x1', courtWidth * 0.15)
-            .attr('y1', courtHeight * 0.4)
-            .attr('x2', courtWidth * 0.15)
-            .attr('y2', courtHeight * 0.6)
+            .attr('x1', ftLineX)
+            .attr('y1', (courtHeight - paintHeight) / 2)
+            .attr('x2', ftLineX)
+            .attr('y2', (courtHeight + paintHeight) / 2)
             .attr('stroke', '#ffffff')
             .attr('stroke-width', 2);
 
-        // Paint area
-        court.append('rect')
-            .attr('x', 0)
-            .attr('y', courtHeight * 0.35)
-            .attr('width', courtWidth * 0.15)
-            .attr('height', courtHeight * 0.3)
+        // Free throw circle (full circle)
+        court.append('circle')
+            .attr('cx', ftLineX)
+            .attr('cy', basketY)
+            .attr('r', courtHeight * 0.12)
             .attr('fill', 'none')
+            .attr('stroke', '#ffffff')
+            .attr('stroke-width', 2);
+
+        // Three-point line - main arc
+        const arcPath = d3.path();
+        const startAngle = -Math.asin((courtHeight * 0.9 - basketY) / threePointRadius);
+        const endAngle = Math.asin((courtHeight * 0.9 - basketY) / threePointRadius);
+        
+        arcPath.arc(basketX, basketY, threePointRadius, startAngle, endAngle);
+        
+        court.append('path')
+            .attr('d', arcPath.toString())
+            .attr('fill', 'none')
+            .attr('stroke', '#ffffff')
+            .attr('stroke-width', 2);
+
+        // Three-point corner lines (connecting arc to sideline)
+        const arcTopY = basketY - threePointRadius * Math.sin(startAngle);
+        const arcBottomY = basketY + threePointRadius * Math.sin(endAngle);
+        
+        // Top corner line
+        court.append('line')
+            .attr('x1', 0)
+            .attr('y1', arcTopY)
+            .attr('x2', cornerThreeX)
+            .attr('y2', arcTopY)
+            .attr('stroke', '#ffffff')
+            .attr('stroke-width', 2);
+
+        // Bottom corner line
+        court.append('line')
+            .attr('x1', 0)
+            .attr('y1', arcBottomY)
+            .attr('x2', cornerThreeX)
+            .attr('y2', arcBottomY)
             .attr('stroke', '#ffffff')
             .attr('stroke-width', 2);
 
         // Basket
         court.append('circle')
-            .attr('cx', courtWidth * 0.05)
-            .attr('cy', courtHeight / 2)
-            .attr('r', 10)
+            .attr('cx', basketX)
+            .attr('cy', basketY)
+            .attr('r', 8)
             .attr('fill', 'none')
             .attr('stroke', '#ff6b6b')
+            .attr('stroke-width', 3);
+
+        // Backboard
+        court.append('line')
+            .attr('x1', basketX - 5)
+            .attr('y1', basketY - 30)
+            .attr('x2', basketX - 5)
+            .attr('y2', basketY + 30)
+            .attr('stroke', '#ffffff')
             .attr('stroke-width', 3);
 
         this.court = court;
         this.courtWidth = courtWidth;
         this.courtHeight = courtHeight;
+        this.basketX = basketX;
+        this.basketY = basketY;
+        this.threePointRadius = threePointRadius;
+        this.ftLineX = ftLineX;
+        this.paintWidth = paintWidth;
+        this.paintHeight = paintHeight;
+        this.cornerThreeX = cornerThreeX;
+        this.arcTopY = arcTopY;
+        this.arcBottomY = arcBottomY;
     }
 
     updateShots(player) {
@@ -146,8 +199,8 @@ class CourtVisualization {
         const playerData = this.data.find(p => p.Player === player);
         if (!playerData) return;
 
-        // Generate random shot locations based on shooting percentages
-        const shots = this.generateShots(playerData);
+        // Generate shots based on actual shooting data
+        const shots = this.generateRealisticShots(playerData);
 
         // Create tooltip
         const tooltip = d3.select('body').append('div')
@@ -160,7 +213,7 @@ class CourtVisualization {
             .style('border-radius', '5px')
             .style('pointer-events', 'none');
 
-        // Add shots
+        // Add shots with different styles for each type
         this.court.selectAll('.shot')
             .data(shots)
             .enter()
@@ -168,16 +221,22 @@ class CourtVisualization {
             .attr('class', 'shot')
             .attr('cx', d => d.x)
             .attr('cy', d => d.y)
-            .attr('r', 5)
-            .attr('fill', d => d.made ? '#00ff88' : '#ff6b6b')
-            .attr('fill-opacity', 0.7)
-            .attr('stroke', d => d.made ? '#00ff88' : '#ff6b6b')
-            .attr('stroke-width', 1)
+            .attr('r', 0)
+            .attr('fill', d => {
+                if (d.type === 'FT') return '#ffd700';
+                return d.made ? '#00ff88' : '#ff6b6b';
+            })
+            .attr('fill-opacity', d => d.type === 'FT' ? 1 : 0.7)
+            .attr('stroke', d => {
+                if (d.type === 'FT') return '#ffd700';
+                return d.made ? '#00ff88' : '#ff6b6b';
+            })
+            .attr('stroke-width', 2)
             .on('mouseover', function(event, d) {
                 d3.select(this)
                     .transition()
                     .duration(200)
-                    .attr('r', 8)
+                    .attr('r', 10)
                     .attr('fill-opacity', 1);
                 
                 tooltip.transition()
@@ -191,53 +250,118 @@ class CourtVisualization {
                 d3.select(this)
                     .transition()
                     .duration(200)
-                    .attr('r', 5)
-                    .attr('fill-opacity', 0.7);
+                    .attr('r', 6)
+                    .attr('fill-opacity', d.type === 'FT' ? 1 : 0.7);
                 
                 tooltip.transition()
                     .duration(500)
                     .style('opacity', 0);
-            });
+            })
+            .transition()
+            .duration(600)
+            .delay((d, i) => i * 20)
+            .attr('r', 6);
 
         // Update statistics
         this.updateStats(playerData);
     }
 
-    generateShots(playerData) {
+    generateRealisticShots(playerData) {
         const shots = [];
-        const numShots = 50;
-
-        // Calculate shot distribution
-        const twoPA = playerData['2PA'] || 0;
-        const threePA = playerData['3PA'] || 0;
-        const totalAttempts = twoPA + threePA;
         
-        if (totalAttempts === 0) return shots;
+        // Calculate shot counts based on attempts
+        const ftAttempts = Math.round(playerData.FTA) || 0;
+        const twoAttempts = Math.round(playerData['2PA']) || 0;
+        const threeAttempts = Math.round(playerData['3PA']) || 0;
+        
+        // Scale down for visualization
+        const scaleFactor = 50 / (ftAttempts + twoAttempts + threeAttempts) || 1;
+        const ftCount = Math.max(1, Math.round(ftAttempts * scaleFactor));
+        const twoCount = Math.max(1, Math.round(twoAttempts * scaleFactor));
+        const threeCount = Math.max(1, Math.round(threeAttempts * scaleFactor));
 
-        const threeProportion = threePA / totalAttempts;
+        // Generate free throws (all from the same spot)
+        for (let i = 0; i < ftCount; i++) {
+            const made = Math.random() < playerData['FT%'];
+            shots.push({
+                x: this.ftLineX,
+                y: this.basketY + (Math.random() - 0.5) * 10, // Small variation
+                made: made,
+                type: 'FT'
+            });
+        }
 
-        for (let i = 0; i < numShots; i++) {
-            const isThree = Math.random() < threeProportion;
-            const made = Math.random() < (isThree ? playerData['3P%'] : playerData['2P%']);
-
+        // Generate 2-point shots
+        for (let i = 0; i < twoCount; i++) {
+            const made = Math.random() < playerData['2P%'];
             let x, y;
-            if (isThree) {
-                // Three-point shots (further from basket)
-                const angle = Math.random() * Math.PI - Math.PI / 2;
-                const distance = this.courtWidth * 0.25 + Math.random() * this.courtWidth * 0.15;
-                x = this.courtWidth * 0.05 + distance * Math.cos(angle);
-                y = this.courtHeight / 2 + distance * Math.sin(angle);
+            
+            // Different zones for 2-pointers
+            const zone = Math.random();
+            if (zone < 0.3) {
+                // Close to basket (layups/dunks) - only in front of basket
+                const angle = (Math.random() * Math.PI) - (Math.PI / 2); // -90 to +90 degrees
+                const distance = Math.random() * 40 + 20;
+                x = this.basketX + Math.cos(angle) * distance;
+                y = this.basketY + Math.sin(angle) * distance;
+            } else if (zone < 0.6) {
+                // Mid-range from wings
+                const side = Math.random() < 0.5 ? -1 : 1;
+                x = this.basketX + Math.random() * (this.paintWidth * 0.8) + 40;
+                y = this.basketY + side * (Math.random() * this.courtHeight * 0.25 + 20);
             } else {
-                // Two-point shots (closer to basket)
-                x = Math.random() * this.courtWidth * 0.3;
-                y = this.courtHeight * 0.3 + Math.random() * this.courtHeight * 0.4;
+                // Mid-range from top
+                x = this.basketX + Math.random() * (this.threePointRadius * 0.7) + 40;
+                y = this.basketY + (Math.random() - 0.5) * this.paintHeight * 0.8;
+            }
+
+            // Ensure shot is inside three-point line and in front of basket
+            const distFromBasket = Math.sqrt(Math.pow(x - this.basketX, 2) + Math.pow(y - this.basketY, 2));
+            if (distFromBasket > this.threePointRadius - 10) {
+                x = this.basketX + (x - this.basketX) * (this.threePointRadius - 15) / distFromBasket;
+                y = this.basketY + (y - this.basketY) * (this.threePointRadius - 15) / distFromBasket;
+            }
+
+            // Ensure x is always greater than basket position
+            x = Math.max(this.basketX + 15, x);
+
+            shots.push({
+                x: Math.max(this.basketX + 15, Math.min(this.courtWidth - 10, x)),
+                y: Math.max(10, Math.min(this.courtHeight - 10, y)),
+                made: made,
+                type: '2PT'
+            });
+        }
+
+        // Generate 3-point shots
+        for (let i = 0; i < threeCount; i++) {
+            const made = Math.random() < playerData['3P%'];
+            let x, y;
+            
+            const zone = Math.random();
+            if (zone < 0.3) {
+                // Corner threes
+                const isTop = Math.random() < 0.5;
+                x = Math.random() * (this.cornerThreeX - 10) + 10;
+                y = isTop ? this.arcTopY + Math.random() * 20 : this.arcBottomY - Math.random() * 20;
+            } else {
+                // Arc threes - only in front of basket
+                const angle = (Math.random() * Math.PI * 0.6) - (Math.PI * 0.3); // -54 to +54 degrees
+                const distance = this.threePointRadius + Math.random() * 30 + 10;
+                x = this.basketX + Math.cos(angle) * distance;
+                y = this.basketY + Math.sin(angle) * distance;
+            }
+
+            // Ensure x is always greater than basket position for arc threes
+            if (zone >= 0.3) {
+                x = Math.max(this.basketX + this.threePointRadius, x);
             }
 
             shots.push({
-                x: Math.max(0, Math.min(this.courtWidth, x)),
-                y: Math.max(0, Math.min(this.courtHeight, y)),
+                x: Math.max(10, Math.min(this.courtWidth - 10, x)),
+                y: Math.max(10, Math.min(this.courtHeight - 10, y)),
                 made: made,
-                type: isThree ? '3-Pointer' : '2-Pointer'
+                type: '3PT'
             });
         }
 

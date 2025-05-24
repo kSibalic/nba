@@ -84,13 +84,22 @@ class DiagramsVisualization {
             .attr('transform', `translate(0,${height})`)
             .call(d3.axisBottom(x))
             .selectAll('text')
-            .style('fill', '#ffffff');
+            .style('fill', '#2c3e50');
 
         // Y axis
         svg.append('g')
             .call(d3.axisLeft(y))
             .selectAll('text')
-            .style('fill', '#ffffff');
+            .style('fill', '#2c3e50');
+
+        // X axis label
+        svg.append('text')
+            .attr('x', width / 2)
+            .attr('y', height + margin.bottom - 10)
+            .attr('text-anchor', 'middle')
+            .style('fill', '#2c3e50')
+            .style('font-weight', 'bold')
+            .text('Points per Game');
 
         // Bars
         const bars = svg.selectAll('.bar')
@@ -188,13 +197,13 @@ class DiagramsVisualization {
             .selectAll('text')
             .attr('transform', 'rotate(-45)')
             .style('text-anchor', 'end')
-            .style('fill', '#ffffff');
+            .style('fill', '#2c3e50');
 
         // Y axis
         svg.append('g')
             .call(d3.axisLeft(y))
             .selectAll('text')
-            .style('fill', '#ffffff');
+            .style('fill', '#2c3e50');
 
         // Y axis label
         svg.append('text')
@@ -203,7 +212,8 @@ class DiagramsVisualization {
             .attr('x', 0 - (height / 2))
             .attr('dy', '1em')
             .style('text-anchor', 'middle')
-            .style('fill', '#ffffff')
+            .style('fill', '#2c3e50')
+            .style('font-weight', 'bold')
             .text('Shooting Percentage');
 
         // Groups
@@ -245,7 +255,7 @@ class DiagramsVisualization {
             .attr('y', 9)
             .attr('dy', '.35em')
             .style('text-anchor', 'start')
-            .style('fill', '#ffffff')
+            .style('fill', '#2c3e50')
             .style('font-size', '12px')
             .text(d => d);
     }
@@ -275,7 +285,8 @@ class DiagramsVisualization {
                     STL: d.STL,
                     BLK: d.BLK
                 },
-                impact: d.PTS + d.AST + d.TRB + d.STL + d.BLK
+                impact: d.PTS + d.AST + d.TRB + d.STL + d.BLK,
+                visible: true
             }))
             .sort((a, b) => b.impact - a.impact)
             .slice(0, 5);
@@ -307,8 +318,9 @@ class DiagramsVisualization {
                 .attr('cy', centerY)
                 .attr('r', (radius / levels) * level)
                 .style('fill', 'none')
-                .style('stroke', '#ffffff')
-                .style('stroke-opacity', 0.3);
+                .style('stroke', '#ddd')
+                .style('stroke-opacity', 0.5)
+                .style('stroke-width', 1);
         }
 
         // Draw axes
@@ -322,8 +334,9 @@ class DiagramsVisualization {
                 .attr('y1', centerY)
                 .attr('x2', x)
                 .attr('y2', y)
-                .style('stroke', '#ffffff')
-                .style('stroke-opacity', 0.3);
+                .style('stroke', '#ddd')
+                .style('stroke-opacity', 0.5)
+                .style('stroke-width', 1);
 
             // Labels
             const labelX = centerX + (radius + 20) * Math.cos(angle);
@@ -334,68 +347,163 @@ class DiagramsVisualization {
                 .attr('y', labelY)
                 .attr('text-anchor', 'middle')
                 .attr('dominant-baseline', 'middle')
-                .style('fill', '#ffffff')
+                .style('fill', '#2c3e50')
                 .style('font-size', '14px')
+                .style('font-weight', 'bold')
                 .text(cat);
         });
 
         // Colors for each player
         const colors = d3.scaleOrdinal(d3.schemeCategory10);
 
-        // Draw data
-        top5.forEach((player, playerIndex) => {
-            const dataPoints = categories.map((cat, i) => {
-                const value = player.stats[cat] / maxValues[cat];
-                const angle = angleSlice * i - Math.PI / 2;
-                return {
-                    x: centerX + rScale(value) * Math.cos(angle),
-                    y: centerY + rScale(value) * Math.sin(angle)
-                };
+        // Create radar group for easier updates
+        const radarGroup = svg.append('g').attr('class', 'radar-paths');
+
+        // Function to update radar chart
+        const updateRadar = () => {
+            const paths = radarGroup.selectAll('.player-path')
+                .data(top5.filter(d => d.visible), d => d.player);
+
+            // Remove paths for hidden players
+            paths.exit()
+                .transition()
+                .duration(300)
+                .style('opacity', 0)
+                .remove();
+
+            // Add/update paths for visible players
+            const pathsEnter = paths.enter()
+                .append('g')
+                .attr('class', 'player-path');
+
+            pathsEnter.each(function(player, playerIndex) {
+                const g = d3.select(this);
+                const actualIndex = top5.findIndex(p => p.player === player.player);
+
+                const dataPoints = categories.map((cat, i) => {
+                    const value = player.stats[cat] / maxValues[cat];
+                    const angle = angleSlice * i - Math.PI / 2;
+                    return {
+                        x: centerX + rScale(value) * Math.cos(angle),
+                        y: centerY + rScale(value) * Math.sin(angle)
+                    };
+                });
+
+                // Add first point at end to close the polygon
+                dataPoints.push(dataPoints[0]);
+
+                // Draw area
+                const path = g.append('path')
+                    .datum(dataPoints)
+                    .attr('d', d3.line()
+                        .x(d => d.x)
+                        .y(d => d.y))
+                    .style('fill', colors(actualIndex))
+                    .style('fill-opacity', 0)
+                    .style('stroke', colors(actualIndex))
+                    .style('stroke-width', 2)
+                    .style('opacity', 0);
+
+                path.transition()
+                    .duration(300)
+                    .style('opacity', 1)
+                    .style('fill-opacity', 0.3);
+
+                // Draw points
+                const circles = g.selectAll('circle')
+                    .data(dataPoints.slice(0, -1))
+                    .enter()
+                    .append('circle')
+                    .attr('cx', d => d.x)
+                    .attr('cy', d => d.y)
+                    .attr('r', 0)
+                    .style('fill', colors(actualIndex));
+
+                circles.transition()
+                    .duration(300)
+                    .attr('r', 4);
             });
+        };
 
-            // Add first point at end to close the polygon
-            dataPoints.push(dataPoints[0]);
+        // Initial draw
+        updateRadar();
 
-            // Draw area
-            svg.append('path')
-                .datum(dataPoints)
-                .attr('d', d3.line()
-                    .x(d => d.x)
-                    .y(d => d.y))
-                .style('fill', colors(playerIndex))
-                .style('fill-opacity', 0.3)
-                .style('stroke', colors(playerIndex))
-                .style('stroke-width', 2);
-
-            // Draw points
-            dataPoints.slice(0, -1).forEach(point => {
-                svg.append('circle')
-                    .attr('cx', point.x)
-                    .attr('cy', point.y)
-                    .attr('r', 4)
-                    .style('fill', colors(playerIndex));
-            });
-        });
-
-        // Legend
+        // Interactive Legend
         const legend = svg.append('g')
             .attr('transform', `translate(20, 20)`);
 
+        legend.append('rect')
+            .attr('x', -5)
+            .attr('y', -5)
+            .attr('width', 150)
+            .attr('height', 110)
+            .attr('rx', 5)
+            .style('fill', 'rgba(255, 255, 255, 0.9)')
+            .style('stroke', '#ddd')
+            .style('stroke-width', 1);
+
         top5.forEach((player, i) => {
             const legendRow = legend.append('g')
-                .attr('transform', `translate(0, ${i * 20})`);
+                .attr('transform', `translate(0, ${i * 20 + 5})`)
+                .style('cursor', 'pointer');
 
-            legendRow.append('rect')
+            // Checkbox background
+            const checkbox = legendRow.append('rect')
+                .attr('x', 0)
+                .attr('y', 0)
                 .attr('width', 15)
                 .attr('height', 15)
-                .style('fill', colors(i));
+                .attr('rx', 3)
+                .style('fill', colors(i))
+                .style('stroke', '#ffffff')
+                .style('stroke-width', 2);
 
-            legendRow.append('text')
+            // Checkmark
+            const checkmark = legendRow.append('path')
+                .attr('d', 'M3,8 L6,11 L12,4')
+                .style('fill', 'none')
+                .style('stroke', '#ffffff')
+                .style('stroke-width', 2)
+                .style('stroke-linecap', 'round')
+                .style('stroke-linejoin', 'round');
+
+            // Player name
+            const text = legendRow.append('text')
                 .attr('x', 20)
                 .attr('y', 12)
-                .style('fill', '#ffffff')
+                .style('fill', '#2c3e50')
                 .style('font-size', '12px')
                 .text(player.player);
+
+            // Click handler
+            legendRow.on('click', function() {
+                player.visible = !player.visible;
+                
+                // Update checkbox appearance
+                checkbox.transition()
+                    .duration(200)
+                    .style('fill', player.visible ? colors(i) : 'rgba(255, 255, 255, 0.2)');
+                
+                checkmark.transition()
+                    .duration(200)
+                    .style('opacity', player.visible ? 1 : 0);
+                
+                text.transition()
+                    .duration(200)
+                    .style('opacity', player.visible ? 1 : 0.5);
+                
+                // Update radar chart
+                updateRadar();
+            });
+
+            // Hover effect
+            legendRow.on('mouseover', function() {
+                d3.select(this).select('rect')
+                    .style('stroke-width', 3);
+            }).on('mouseout', function() {
+                d3.select(this).select('rect')
+                    .style('stroke-width', 2);
+            });
         });
     }
 
@@ -451,32 +559,67 @@ class DiagramsVisualization {
             });
         });
 
+        // Tooltip
+        const tooltip = d3.select('body').append('div')
+            .attr('class', 'tooltip')
+            .style('opacity', 0)
+            .style('position', 'absolute')
+            .style('background-color', 'rgba(0, 0, 0, 0.9)')
+            .style('color', 'white')
+            .style('padding', '10px')
+            .style('border-radius', '5px')
+            .style('pointer-events', 'none');
+
         // Draw tiles
-        svg.selectAll()
+        svg.selectAll('.matrix-tile')
             .data(matrix)
             .enter()
             .append('rect')
+            .attr('class', 'matrix-tile')
             .attr('x', d => x(d.stat))
             .attr('y', d => y(d.player))
             .attr('width', x.bandwidth())
             .attr('height', y.bandwidth())
             .style('fill', d => colorScale(d.normalized))
             .style('opacity', 0)
+            .style('cursor', 'pointer')
+            .on('mouseover', function(event, d) {
+                d3.select(this)
+                    .style('stroke', '#000')
+                    .style('stroke-width', 2);
+                
+                tooltip.transition()
+                    .duration(200)
+                    .style('opacity', .9);
+                tooltip.html(`${d.player}<br/>${d.stat}: ${d.value.toFixed(1)}`)
+                    .style('left', (event.pageX + 10) + 'px')
+                    .style('top', (event.pageY - 28) + 'px');
+            })
+            .on('mouseout', function() {
+                d3.select(this)
+                    .style('stroke', 'none');
+                
+                tooltip.transition()
+                    .duration(500)
+                    .style('opacity', 0);
+            })
             .transition()
             .duration(800)
             .style('opacity', 1);
 
         // Add text values
-        svg.selectAll()
+        svg.selectAll('.matrix-text')
             .data(matrix)
             .enter()
             .append('text')
+            .attr('class', 'matrix-text')
             .attr('x', d => x(d.stat) + x.bandwidth() / 2)
             .attr('y', d => y(d.player) + y.bandwidth() / 2)
             .attr('text-anchor', 'middle')
             .attr('dominant-baseline', 'middle')
             .style('fill', d => d.normalized > 0.5 ? '#ffffff' : '#000000')
             .style('font-size', '10px')
+            .style('pointer-events', 'none')
             .text(d => d.value.toFixed(1));
 
         // X axis
@@ -484,7 +627,7 @@ class DiagramsVisualization {
             .attr('transform', `translate(0,${-5})`)
             .call(d3.axisTop(x))
             .selectAll('text')
-            .style('fill', '#ffffff')
+            .style('fill', '#2c3e50')
             .style('font-size', '14px')
             .style('font-weight', 'bold');
 
@@ -493,7 +636,7 @@ class DiagramsVisualization {
             .attr('transform', `translate(${-5},0)`)
             .call(d3.axisLeft(y))
             .selectAll('text')
-            .style('fill', '#ffffff')
+            .style('fill', '#2c3e50')
             .style('font-size', '12px');
 
         // Title
@@ -501,7 +644,7 @@ class DiagramsVisualization {
             .attr('x', width / 2)
             .attr('y', -30)
             .attr('text-anchor', 'middle')
-            .style('fill', '#ffffff')
+            .style('fill', '#2c3e50')
             .style('font-size', '16px')
             .style('font-weight', 'bold')
             .text('Player Performance Matrix');

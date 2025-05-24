@@ -96,13 +96,13 @@ class GraphsVisualization {
             .selectAll('text')
             .attr('transform', 'rotate(-45)')
             .style('text-anchor', 'end')
-            .style('fill', '#ffffff');
+            .style('fill', '#2c3e50');
 
         // Y axis
         svg.append('g')
             .call(d3.axisLeft(y))
             .selectAll('text')
-            .style('fill', '#ffffff');
+            .style('fill', '#2c3e50');
 
         // Y axis label
         const statLabels = {
@@ -119,7 +119,8 @@ class GraphsVisualization {
             .attr('x', 0 - (height / 2))
             .attr('dy', '1em')
             .style('text-anchor', 'middle')
-            .style('fill', '#ffffff')
+            .style('fill', '#2c3e50')
+            .style('font-weight', 'bold')
             .text(statLabels[this.selectedStat]);
 
         // Bars
@@ -195,13 +196,13 @@ class GraphsVisualization {
             .selectAll('text')
             .attr('transform', 'rotate(-45)')
             .style('text-anchor', 'end')
-            .style('fill', '#ffffff');
+            .style('fill', '#2c3e50');
 
         // Y axis
         svg.append('g')
             .call(d3.axisLeft(y))
             .selectAll('text')
-            .style('fill', '#ffffff');
+            .style('fill', '#2c3e50');
 
         // Y axis label
         svg.append('text')
@@ -210,7 +211,8 @@ class GraphsVisualization {
             .attr('x', 0 - (height / 2))
             .attr('dy', '1em')
             .style('text-anchor', 'middle')
-            .style('fill', '#ffffff')
+            .style('fill', '#2c3e50')
+            .style('font-weight', 'bold')
             .text('Average Points per Game');
 
         // Bars
@@ -294,19 +296,20 @@ class GraphsVisualization {
             .attr('transform', `translate(0,${height})`)
             .call(d3.axisBottom(x))
             .selectAll('text')
-            .style('fill', '#ffffff');
+            .style('fill', '#2c3e50');
 
         // Y axis
         svg.append('g')
             .call(d3.axisLeft(y))
             .selectAll('text')
-            .style('fill', '#ffffff');
+            .style('fill', '#2c3e50');
 
         // Axis labels
         svg.append('text')
             .attr('transform', `translate(${width/2}, ${height + margin.bottom})`)
             .style('text-anchor', 'middle')
-            .style('fill', '#ffffff')
+            .style('fill', '#2c3e50')
+            .style('font-weight', 'bold')
             .text('Points per Game');
 
         svg.append('text')
@@ -315,7 +318,8 @@ class GraphsVisualization {
             .attr('x', 0 - (height / 2))
             .attr('dy', '1em')
             .style('text-anchor', 'middle')
-            .style('fill', '#ffffff')
+            .style('fill', '#2c3e50')
+            .style('font-weight', 'bold')
             .text('Number of Players');
 
         // Tooltip
@@ -411,19 +415,20 @@ class GraphsVisualization {
             .attr('transform', `translate(0,${height})`)
             .call(d3.axisBottom(x))
             .selectAll('text')
-            .style('fill', '#ffffff');
+            .style('fill', '#2c3e50');
 
         // Y axis
         svg.append('g')
             .call(d3.axisLeft(y))
             .selectAll('text')
-            .style('fill', '#ffffff');
+            .style('fill', '#2c3e50');
 
         // Axis labels
         svg.append('text')
             .attr('transform', `translate(${width/2}, ${height + margin.bottom})`)
             .style('text-anchor', 'middle')
-            .style('fill', '#ffffff')
+            .style('fill', '#2c3e50')
+            .style('font-weight', 'bold')
             .text('Points per Game');
 
         svg.append('text')
@@ -432,7 +437,8 @@ class GraphsVisualization {
             .attr('x', 0 - (height / 2))
             .attr('dy', '1em')
             .style('text-anchor', 'middle')
-            .style('fill', '#ffffff')
+            .style('fill', '#2c3e50')
+            .style('font-weight', 'bold')
             .text('Assists + Rebounds per Game');
 
         // Tooltip

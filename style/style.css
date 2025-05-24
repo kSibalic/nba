@@ -88,6 +88,22 @@ body {
     }
 }
 
+@keyframes shimmer {
+    0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+    100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
 .fade-in {
     animation: fadeIn 1s ease-out forwards;
 }
@@ -112,6 +128,10 @@ body {
 
 .bounce-in {
     animation: bounceIn 0.6s ease-out forwards;
+}
+
+.slide-down {
+    animation: slideDown 0.6s ease-out forwards;
 }
 
 .container {
@@ -143,11 +163,6 @@ body {
     background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
     transform: rotate(45deg);
     animation: shimmer 3s infinite;
-}
-
-@keyframes shimmer {
-    0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-    100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
 }
 
 .header h1 {
@@ -464,17 +479,6 @@ body {
     width: 100%;
 }
 
-@keyframes slideDown {
-    from {
-        transform: translateY(-100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
-
 /* Visualization Pages Common Styles */
 .visualization-page {
     background: #1a1a1a;
@@ -506,41 +510,61 @@ body {
 
 /* Controls Styling */
 .controls {
-    background: #2d2d2d;
-    border-radius: 10px;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    animation: slideInUp 0.6s ease-out forwards;
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
 }
 
 .form-select {
-    background-color: #3d3d3d;
-    color: #ffffff;
-    border: 1px solid #00ff88;
+    padding: 10px 15px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    background: white;
+    font-size: 0.95rem;
     transition: all 0.3s ease;
+    cursor: pointer;
+    min-width: 200px;
+    color: #2c3e50;
+}
+
+.form-select:hover {
+    border-color: #3498db;
 }
 
 .form-select:focus {
-    background-color: #3d3d3d;
-    color: #ffffff;
-    border-color: #00ff88;
-    box-shadow: 0 0 0 0.25rem rgba(0, 255, 136, 0.25);
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
 }
 
 /* Chart and Graph Containers */
 .chart-container, .graph-container {
-    background: #2d2d2d;
+    background: #ffffff;
     border-radius: 15px;
-    padding: 1.5rem;
+    padding: 2rem;
     margin-bottom: 2rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
     animation: fadeIn 0.8s ease-out forwards;
+    overflow: visible;
+    min-height: 450px;
 }
 
 .chart-container:hover, .graph-container:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 15px rgba(0, 255, 136, 0.1);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Force text colors in charts */
+.chart-container svg text,
+.graph-container svg text {
+    fill: #2c3e50 !important;
+}
+
+.chart-container .tick text,
+.graph-container .tick text {
+    fill: #2c3e50 !important;
 }
 
 /* Court Visualization Styles */
@@ -552,6 +576,7 @@ body {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
     animation: fadeIn 0.8s ease-out forwards;
+    position: relative;
 }
 
 .court-container:hover {
@@ -565,6 +590,51 @@ body {
     position: relative;
     overflow: hidden;
     border-radius: 10px;
+}
+
+/* Shot Legend */
+.shot-legend {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 15px;
+    border-radius: 8px;
+    color: white;
+    font-size: 12px;
+}
+
+.shot-legend-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.shot-legend-item:last-child {
+    margin-bottom: 0;
+}
+
+.shot-legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 10px;
+    border: 2px solid;
+}
+
+.shot-legend-dot.ft {
+    background-color: #ffd700;
+    border-color: #ffd700;
+}
+
+.shot-legend-dot.made {
+    background-color: #00ff88;
+    border-color: #00ff88;
+}
+
+.shot-legend-dot.missed {
+    background-color: #ff6b6b;
+    border-color: #ff6b6b;
 }
 
 .shot-dot {
@@ -593,42 +663,95 @@ body {
 
 /* Stats Panel Styles */
 .stats-panel {
-    background: #2d2d2d;
+    background: white;
     border-radius: 10px;
-    padding: 1rem;
-    margin-top: 1rem;
-    animation: slideInUp 0.6s ease-out forwards;
+    padding: 20px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    border: 1px solid #e9ecef;
 }
 
-.stats-value {
-    color: #00ff88;
-    font-size: 1.2rem;
-    font-weight: bold;
+.visualization-title {
+    font-size: 1.1rem;
+    color: #2c3e50;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.stats-panel .stats-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #3498db;
     text-align: center;
-    animation: pulse 2s infinite;
 }
 
 /* Loading Animation */
 .loading {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
+    text-align: center;
+    padding: 50px;
+    font-size: 1.2rem;
+    color: #7f8c8d;
 }
 
 .loading-spinner {
     width: 50px;
     height: 50px;
     border: 5px solid #f3f3f3;
-    border-top: 5px solid #00ff88;
+    border-top: 5px solid #3498db;
     border-radius: 50%;
     animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+/* Tooltip */
+.tooltip {
+    position: absolute;
+    text-align: center;
+    padding: 12px;
+    font-size: 14px;
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    border-radius: 8px;
+    pointer-events: none;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    z-index: 1000;
+    max-width: 200px;
+}
+
+/* SVG Styles */
+svg {
+    font-family: 'Arial', sans-serif;
+    display: block;
+    margin: 0 auto;
+}
+
+svg text {
+    user-select: none;
+    fill: #2c3e50 !important; /* Force dark text for readability */
+}
+
+/* Dark background SVG text */
+#court svg text {
+    fill: #ffffff !important;
+}
+
+/* Axes styling */
+.tick text {
+    fill: #2c3e50 !important;
+    font-size: 12px;
+}
+
+.axis-label {
+    fill: #2c3e50 !important;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Ensure graphs don't overflow */
+#trendGraph, #teamGraph, #distributionGraph, #impactGraph,
+#scoringChart, #efficiencyChart, #radarChart, #matrixChart {
+    width: 100%;
+    position: relative;
 }
 
 /* Responsive Design */
@@ -647,6 +770,19 @@ body {
 
     .stats-panel {
         margin-top: 0.5rem;
+    }
+
+    .datasets-container {
+        grid-template-columns: 1fr;
+    }
+
+    .controls {
+        flex-direction: column;
+    }
+
+    .form-select {
+        width: 100%;
+        margin-bottom: 10px;
     }
 }
 
@@ -669,33 +805,3 @@ body {
 .navbar-dark .nav-link:hover {
     color: #00cc6a;
 }
-
-/* Animation Keyframes */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes pulse {
-    0% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.05);
-    }
-    100% {
-        transform: scale(1);
-    }
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
