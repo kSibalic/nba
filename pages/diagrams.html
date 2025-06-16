@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NBA Statistics Diagrams</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+  <link rel="stylesheet" href="../style/style.css" />
+</head>
+<body>
+  <nav class="navbar slide-down">
+    <ul>
+      <li><a href="../index.html" class="nav-link">🏠 Home</a></li>
+      <li><a href="visual-court.html" class="nav-link">🎯 Visual Court</a></li>
+      <li><a href="graphs.html" class="nav-link">📈 Graphs</a></li>
+      <li><a href="diagrams.html" class="nav-link">🧠 Diagrams</a></li>
+    </ul>
+  </nav>
+
+  <div class="container">
+    <div class="header">
+      <h1 class="fade-in">📊 NBA Statistics Analysis</h1>
+      <p class="fade-in-delay">Interactive Data Visualization</p>
+    </div>
+
+    <div class="content">
+      <div id="loading" class="loading">
+        <div class="loading-spinner"></div>
+        <p>Loading basketball statistics...</p>
+      </div>
+
+      <div id="error" class="error" style="display: none;">
+        Error loading data. Please check if the CSV files are available.
+      </div>
+
+      <div id="datasets" class="datasets-container" style="display: none;">
+        <div class="dataset-section regular-season slide-in-left">
+          <div class="dataset-title">📈 Top Scorers Comparison</div>
+          <div class="chart-container"><div id="scoringChart"></div></div>
+        </div>
+
+        <div class="dataset-section playoffs slide-in-right">
+          <div class="dataset-title">🎯 Shooting Efficiency</div>
+          <div class="chart-container"><div id="efficiencyChart"></div></div>
+        </div>
+
+        <div class="dataset-section regular-season slide-in-left">
+          <div class="dataset-title">🏆 Player Performance Radar</div>
+          <div class="chart-container"><div id="radarChart"></div></div>
+        </div>
+
+        <div class="dataset-section playoffs slide-in-right">
+          <div class="dataset-title">⭐ Player Comparison Matrix</div>
+          <div class="chart-container"><div id="matrixChart"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../script/diagrams.js"></script>
+</body>
+</html>

@@ -1,0 +1,931 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 80px 20px 20px;
+    overflow-x: hidden;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.3);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+    70% {
+        transform: scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+    100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.fade-in {
+    animation: fadeIn 1s ease-out forwards;
+}
+
+.fade-in-delay {
+    animation: fadeIn 1s ease-out 0.3s forwards;
+    opacity: 0;
+}
+
+.slide-in-left {
+    animation: slideInLeft 0.8s ease-out forwards;
+}
+
+.slide-in-right {
+    animation: slideInRight 0.8s ease-out 0.2s forwards;
+    opacity: 0;
+}
+
+.slide-in-up {
+    animation: slideInUp 0.6s ease-out forwards;
+}
+
+.bounce-in {
+    animation: bounceIn 0.6s ease-out forwards;
+}
+
+.slide-down {
+    animation: slideDown 0.6s ease-out forwards;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    overflow: hidden;
+    animation: slideInUp 0.8s ease-out forwards;
+}
+
+.header {
+    background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+    color: white;
+    padding: 30px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+    transform: rotate(45deg);
+    animation: shimmer 3s infinite;
+}
+
+.header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    position: relative;
+    z-index: 1;
+}
+
+.header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    position: relative;
+    z-index: 1;
+}
+
+.content {
+    padding: 30px;
+}
+
+.datasets-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.dataset-section {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 25px;
+    border: 2px solid #e9ecef;
+    transition: all 0.3s ease;
+    min-width: 0; /* Allow shrinking */
+}
+
+.dataset-section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.dataset-title {
+    font-size: 1.5rem;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: bold;
+    animation: pulse 2s infinite;
+}
+
+.regular-season {
+    border-left: 5px solid #3498db;
+}
+
+.playoffs {
+    border-left: 5px solid #e74c3c;
+}
+
+.stats-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.stats-table th {
+    background: linear-gradient(135deg, #34495e, #2c3e50);
+    color: white;
+    padding: 12px 8px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.9rem;
+    position: relative;
+}
+
+.stats-table th::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, #3498db, #e74c3c);
+}
+
+.stats-table td {
+    padding: 10px 8px;
+    text-align: center;
+    border-bottom: 1px solid #ecf0f1;
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+}
+
+.stats-table tbody tr {
+    opacity: 0;
+    animation: slideInUp 0.5s ease-out forwards;
+    transition: all 0.3s ease;
+}
+
+.stats-table tbody tr:nth-child(1) { animation-delay: 0.1s; }
+.stats-table tbody tr:nth-child(2) { animation-delay: 0.15s; }
+.stats-table tbody tr:nth-child(3) { animation-delay: 0.2s; }
+.stats-table tbody tr:nth-child(4) { animation-delay: 0.25s; }
+.stats-table tbody tr:nth-child(5) { animation-delay: 0.3s; }
+.stats-table tbody tr:nth-child(6) { animation-delay: 0.35s; }
+.stats-table tbody tr:nth-child(7) { animation-delay: 0.4s; }
+.stats-table tbody tr:nth-child(8) { animation-delay: 0.45s; }
+.stats-table tbody tr:nth-child(9) { animation-delay: 0.5s; }
+.stats-table tbody tr:nth-child(10) { animation-delay: 0.55s; }
+.stats-table tbody tr:nth-child(n+11) { animation-delay: 0.6s; }
+
+.stats-table tbody tr:hover {
+    background: linear-gradient(135deg, #f1f2f6, #ffffff);
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.stats-table tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+.player-name {
+    font-weight: bold;
+    color: #2c3e50;
+    transition: color 0.3s ease;
+}
+
+.stats-table tbody tr:hover .player-name {
+    color: #3498db;
+}
+
+.team {
+    font-weight: bold;
+    color: #e74c3c;
+    transition: all 0.3s ease;
+}
+
+.stats-table tbody tr:hover .team {
+    color: #c0392b;
+    transform: scale(1.1);
+}
+
+.position {
+    background: #3498db;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.position:hover {
+    background: #2980b9;
+    transform: scale(1.1);
+}
+
+.loading {
+    text-align: center;
+    padding: 50px;
+    font-size: 1.2rem;
+    color: #7f8c8d;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+.error {
+    background: #e74c3c;
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    margin: 20px 0;
+    text-align: center;
+    animation: bounceIn 0.6s ease-out forwards;
+}
+
+.stats-summary {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.stat-card {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    animation: bounceIn 0.6s ease-out forwards;
+}
+
+.stat-card:nth-child(1) { animation-delay: 0.1s; opacity: 0; }
+.stat-card:nth-child(2) { animation-delay: 0.2s; opacity: 0; }
+.stat-card:nth-child(3) { animation-delay: 0.3s; opacity: 0; }
+.stat-card:nth-child(4) { animation-delay: 0.4s; opacity: 0; }
+
+.stat-card:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #2c3e50;
+    transition: color 0.3s ease;
+}
+
+.stat-card:hover .stat-value {
+    color: #3498db;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: #7f8c8d;
+    margin-top: 5px;
+}
+
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.stats-table th,
+.stats-table td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.navbar {
+    background-color: #1e1e2f;
+    padding: 1rem 2rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 999;
+    animation: slideDown 0.6s ease-out forwards;
+    opacity: 0;
+}
+
+.navbar ul {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    gap: 2rem;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar .nav-link {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+.navbar .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -4px;
+    width: 0%;
+    height: 2px;
+    background-color: #ff6b6b;
+    transition: width 0.3s ease;
+}
+
+.navbar .nav-link:hover {
+    color: #ff6b6b;
+}
+
+.navbar .nav-link:hover::after {
+    width: 100%;
+}
+
+/* Visualization Pages Common Styles */
+.visualization-page {
+    background: #1a1a1a;
+    color: #ffffff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.visualization-container {
+    background: #2d2d2d;
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    animation: fadeIn 0.8s ease-out forwards;
+    width: 100%;
+    min-width: 0;
+}
+
+.visualization-container:hover {
+    transform: translateY(-5px);
+}
+
+.visualization-title {
+    color: #00ff88;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    text-align: center;
+    animation: pulse 2s infinite;
+}
+
+/* Controls Styling */
+.controls {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.form-select {
+    padding: 10px 15px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    background: white;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    min-width: 200px;
+    color: #2c3e50;
+}
+
+.form-select:hover {
+    border-color: #3498db;
+}
+
+.form-select:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+/* Chart and Graph Containers - IMPROVED RESPONSIVE HANDLING */
+.chart-container, .graph-container {
+    background: #ffffff;
+    border-radius: 15px;
+    padding: 1rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    animation: fadeIn 0.8s ease-out forwards;
+    /* CRITICAL: Ensure responsive behavior */
+    min-height: 350px;
+    width: 100%;
+    min-width: 0; /* Allow shrinking */
+    position: relative;
+}
+
+.chart-container:hover, .graph-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Ensure SVG elements are properly contained and responsive */
+.chart-container svg, .graph-container svg {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+/* Force text colors in charts */
+.chart-container svg text,
+.graph-container svg text {
+    fill: #2c3e50 !important;
+}
+
+.chart-container .tick text,
+.graph-container .tick text {
+    fill: #2c3e50 !important;
+}
+
+/* Court Visualization Styles */
+.court-container {
+    background: #2d2d2d;
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    animation: fadeIn 0.8s ease-out forwards;
+    position: relative;
+    width: 100%;
+    min-width: 0;
+}
+
+.court-container:hover {
+    transform: translateY(-5px);
+}
+
+#court {
+    width: 100%;
+    max-width: 100%;
+    height: 600px;
+    background: #2d2d2d;
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+/* Shot Legend - Made more responsive */
+.shot-legend {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 15px;
+    border-radius: 8px;
+    color: white;
+    font-size: 12px;
+    max-width: 150px;
+}
+
+.shot-legend-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.shot-legend-item:last-child {
+    margin-bottom: 0;
+}
+
+.shot-legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 10px;
+    border: 2px solid;
+}
+
+.shot-legend-dot.ft {
+    background-color: #ffd700;
+    border-color: #ffd700;
+}
+
+.shot-legend-dot.made {
+    background-color: #00ff88;
+    border-color: #00ff88;
+}
+
+.shot-legend-dot.missed {
+    background-color: #ff6b6b;
+    border-color: #ff6b6b;
+}
+
+.shot-dot {
+    fill: #00ff88;
+    opacity: 0.7;
+    transition: all 0.3s ease;
+}
+
+.shot-dot:hover {
+    opacity: 1;
+    transform: scale(1.2);
+}
+
+.court-line {
+    stroke: #ffffff;
+    stroke-width: 2;
+    fill: none;
+}
+
+.court-area {
+    fill: none;
+    stroke: #ffffff;
+    stroke-width: 2;
+    stroke-dasharray: 5,5;
+}
+
+/* Stats Panel Styles */
+.stats-panel {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    border: 1px solid #e9ecef;
+    width: 100%;
+    min-width: 0;
+}
+
+.visualization-title {
+    font-size: 1.1rem;
+    color: #2c3e50;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.stats-panel .stats-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #3498db;
+    text-align: center;
+}
+
+/* Tooltip */
+.tooltip {
+    position: absolute;
+    text-align: center;
+    padding: 12px;
+    font-size: 14px;
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    border-radius: 8px;
+    pointer-events: none;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    z-index: 1000;
+    max-width: 200px;
+}
+
+/* SVG Styles - Enhanced for better responsiveness */
+svg {
+    font-family: 'Arial', sans-serif;
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    height: auto;
+    overflow: visible; /* Allow labels to show outside bounds if needed */
+}
+
+svg text {
+    user-select: none;
+    fill: #2c3e50 !important;
+}
+
+/* Dark background SVG text */
+#court svg text {
+    fill: #ffffff !important;
+}
+
+/* Axes styling */
+.tick text {
+    fill: #2c3e50 !important;
+    font-size: 12px;
+}
+
+.axis-label {
+    fill: #2c3e50 !important;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Ensure all chart elements are contained and responsive */
+#trendGraph, #teamGraph, #distributionGraph, #impactGraph,
+#scoringChart, #efficiencyChart, #radarChart, #matrixChart {
+    width: 100%;
+    max-width: 100%;
+    position: relative;
+}
+
+/* Dark Theme Navigation */
+.navbar-dark {
+    background: #1a1a1a !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.navbar-dark .navbar-brand {
+    color: #00ff88;
+    font-weight: bold;
+}
+
+.navbar-dark .nav-link {
+    color: #00ff88;
+    transition: color 0.3s ease;
+}
+
+.navbar-dark .nav-link:hover {
+    color: #00cc6a;
+}
+
+/* RESPONSIVE DESIGN - Enhanced breakpoints */
+@media (max-width: 1440px) {
+    .container {
+        max-width: 95%;
+    }
+    
+    .chart-container, .graph-container {
+        padding: 1.5rem;
+        min-height: 320px;
+    }
+}
+
+@media (max-width: 1280px) {
+    .datasets-container {
+        gap: 20px;
+    }
+    
+    .chart-container, .graph-container {
+        padding: 1rem;
+        min-height: 300px;
+    }
+    
+    .shot-legend {
+        font-size: 10px;
+        padding: 10px;
+        max-width: 120px;
+    }
+    
+    .header h1 {
+        font-size: 2.2rem;
+    }
+    
+    .stats-summary {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .datasets-container {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .chart-container, .graph-container {
+        min-height: 280px;
+        margin-bottom: 1rem;
+    }
+    
+    #court {
+        height: 400px;
+    }
+    
+    .shot-legend {
+        bottom: 10px;
+        right: 10px;
+        font-size: 9px;
+        padding: 8px;
+    }
+    
+    .navbar ul {
+        gap: 1rem;
+    }
+    
+    .navbar .nav-link {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 60px 10px 10px;
+    }
+    
+    .container {
+        margin: 0 5px;
+        border-radius: 10px;
+    }
+    
+    .content {
+        padding: 15px;
+    }
+    
+    .visualization-container {
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .chart-container, .graph-container {
+        padding: 0.8rem;
+        min-height: 250px;
+        margin-bottom: 1rem;
+    }
+
+    #court {
+        height: 300px;
+    }
+
+    .stats-panel {
+        margin-top: 0.5rem;
+        padding: 15px;
+    }
+
+    .controls {
+        flex-direction: column;
+    }
+
+    .form-select {
+        width: 100%;
+        margin-bottom: 10px;
+        min-width: auto;
+    }
+    
+    .header h1 {
+        font-size: 1.8rem;
+    }
+    
+    .header p {
+        font-size: 1rem;
+    }
+    
+    .stats-summary {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+    
+    .shot-legend {
+        position: static;
+        margin-top: 10px;
+        max-width: 100%;
+        font-size: 11px;
+    }
+    
+    .slide-in-right {
+        animation: slideInLeft 0.8s ease-out 0.2s forwards;
+        opacity: 0;
+    }
+    
+    .navbar {
+        padding: 0.8rem 1rem;
+    }
+    
+    .navbar ul {
+        flex-direction: column;
+        gap: 0.5rem;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .chart-container, .graph-container {
+        padding: 0.5rem;
+        min-height: 220px;
+    }
+    
+    #court {
+        height: 250px;
+    }
+    
+    .header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .dataset-section {
+        padding: 15px;
+    }
+    
+    .shot-legend {
+        font-size: 10px;
+        padding: 6px;
+    }
+}

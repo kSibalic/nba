@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basketball Player Stats - Regular Season vs Playoffs</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+    <link rel="stylesheet" href="style/style.css">
+</head>
+<body>
+    <nav class="navbar slide-down">
+        <ul>
+            <li><a href="index.html" class="nav-link">🏠 Home</a></li>
+            <li><a href="pages/visual-court.html" class="nav-link">🎯 Visual Court</a></li>
+            <li><a href="pages/graphs.html" class="nav-link">📈 Graphs</a></li>
+            <li><a href="pages/diagrams.html" class="nav-link">🧠 Diagrams</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <div class="header">
+            <h1 class="fade-in">🏀 Basketball Player Statistics</h1>
+            <p class="fade-in-delay">Regular Season vs Playoffs Performance Comparison</p>
+        </div>
+        
+        <div class="content">
+            <div id="loading" class="loading">
+                <div class="loading-spinner"></div>
+                <p>Loading basketball statistics...</p>
+            </div>
+
+            <div id="error" class="error" style="display: none;">
+                Error loading data. Please check if the CSV files are available.
+            </div>
+
+            <div id="datasets" class="datasets-container" style="display: none;">
+                <div class="dataset-section regular-season slide-in-left">
+                    <div class="dataset-title">📊 Regular Season Stats</div>
+                    <div id="regular-summary" class="stats-summary"></div>
+                    <div class="table-wrapper">
+                        <table id="regular-table" class="stats-table">
+                            <thead>
+                                <tr>
+                                    <th>Rk</th>
+                                    <th>Player</th>
+                                    <th>Pos</th>
+                                    <th>Age</th>
+                                    <th>Team</th>
+                                    <th>G</th>
+                                    <th>MP</th>
+                                    <th>FG%</th>
+                                    <th>3P%</th>
+                                    <th>FT%</th>
+                                    <th>TRB</th>
+                                    <th>AST</th>
+                                    <th>PTS</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="dataset-section playoffs slide-in-right">
+                    <div class="dataset-title">🏆 Playoff Stats</div>
+                    <div id="playoff-summary" class="stats-summary"></div>
+                    <div class="table-wrapper">
+                        <table id="playoff-table" class="stats-table">
+                            <thead>
+                                <tr>
+                                    <th>Rk</th>
+                                    <th>Player</th>
+                                    <th>Pos</th>
+                                    <th>Age</th>
+                                    <th>Team</th>
+                                    <th>G</th>
+                                    <th>MP</th>
+                                    <th>FG%</th>
+                                    <th>3P%</th>
+                                    <th>FT%</th>
+                                    <th>TRB</th>
+                                    <th>AST</th>
+                                    <th>PTS</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script/main.js"></script>
+</body>
+</html>
